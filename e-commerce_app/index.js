@@ -26,7 +26,6 @@ const resolvers = {
         },
         product:(parents, args,context)=>{
             const productId = args.id;
-
             const product= products.find(product => product.id===productId);
             return product;
         }
