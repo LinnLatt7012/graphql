@@ -1,43 +1,13 @@
-const { ApolloServer, gql} = require("apollo-server");
-const { products } = require("./intialdata")
-
-const typeDefs = gql`
-    type Query{
-        hello: [String]
-        products:[Product!]!
-        product(id: ID!):Product
-    },
-    type Product {
-        id:ID
-        name:String!
-        description:String!
-        quantity: Int!
-        price: Float!
-        onSale: Boolean!
-    }
-`
-const resolvers = {
-    Query:{
-        hello: ()=>{
-            return ["Wold!","Hi","Fine"]
-        },
-        products:()=>{
-            return products
-        },
-        product:(parents, args,context)=>{
-            const productId = args.id;
-            const product= products.find(product => product.id===productId);
-            return product;
-        }
-
-    },
-}
+const { ApolloServer} = require("apollo-server");
+const { typeDefs } = require("./schema")
+const { resolvers } = require("./resolvers")
+const { db } = require("./db")
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers
-}
-);
+    resolvers,
+    context:db
+});
 server.listen().then(({url})=>{
     console.log("Server is ready at "+ url);
 })
